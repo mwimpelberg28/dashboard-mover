@@ -58,6 +58,42 @@ Increase timeout for large dashboards:
 python grafana_export.py --url "https://grafana.example.com" --api-key "your-api-key" --timeout 600
 ```
 
+## Terraform Configuration
+
+The script generates dashboard and folder resources, but you'll need to provide your own provider configuration. Create a `provider.tf` file with the following content:
+
+```hcl
+terraform {
+  required_providers {
+    grafana = {
+      source = "grafana/grafana"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "grafana" {
+  url  = var.grafana_url
+  auth = var.grafana_auth
+}
+
+variable "grafana_url" {
+  type = string
+}
+
+variable "grafana_auth" {
+  type = string
+  sensitive = true
+}
+```
+
+Then create a `terraform.tfvars` file with your Grafana credentials:
+
+```hcl
+grafana_url  = "https://your-grafana-url"
+grafana_auth = "your-api-key"
+```
+
 ## Output
 
 The script generates:
